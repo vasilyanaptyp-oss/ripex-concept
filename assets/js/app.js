@@ -127,7 +127,7 @@
     if (name) setTimeout(function () { name.focus({ preventScroll: true }); }, 520);
   });
 
-  /* ---------- form: inline validation, honest concept notice ---------- */
+  /* ---------- form: inline validation, then a prepared e-mail to RIPEX ---------- */
   var frm = d.getElementById('frm');
   var done = d.getElementById('done');
   var again = d.getElementById('again');
@@ -177,13 +177,27 @@
         (badName ? name : mail).focus();
         return;
       }
+      var val = function (id) { var el = d.getElementById(id); return el && el.value.trim() ? el.value.trim() : '-'; };
+      var tema = val('f-tema');
+      var body = [
+        'Vardas: ' + val('f-name'),
+        'El. paštas: ' + val('f-mail'),
+        'Tel. nr.: ' + val('f-tel'),
+        'Tema: ' + tema,
+        'Žinutė: ' + val('f-msg')
+      ].join('\n');
+      var href = 'mailto:ripex.info@gmail.com?subject=' + encodeURIComponent('Užklausa RIPEX' + (tema !== '-' ? ': ' + tema : '')) +
+        '&body=' + encodeURIComponent(body);
       frm.hidden = true;
-      if (status) status.textContent = 'Forma užpildyta teisingai. Peržiūrėkite atsakymą žemiau.';
+      if (status) status.textContent = 'Atidaroma el. pašto programa su paruoštu laišku. Išsiųskite jį, kad užklausa pasiektų RIPEX.';
       if (done) {
         done.hidden = false;
         done.setAttribute('tabindex', '-1');
         done.focus({ preventScroll: true });
       }
+      var a = d.createElement('a');
+      a.href = href;
+      a.click();
     });
   }
 
